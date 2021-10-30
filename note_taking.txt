@@ -1,0 +1,28 @@
+len(envs.observation_space.shape) == 3
+CNNBase chosen
+num_inputs:  4
+obs.shape in reset:  torch.Size([8, 1, 128, 128])
+reset called in envs.py; self.stacked_obs.shape =  torch.Size([8, 4, 128, 128])
+Updates 0, num timesteps 40, FPS 52 
+ Last 40 training episodes: mean/median reward 0.71526/0.70753, sum reward 28.61052, min/max reward 0.50108/0.96323, dist entropy 2.83788, value loss 5.68113, action loss 6.47993
+
+
+Process finished with exit code -1
+
+
+
+10/25 Logs:
+1. 新发现的问题：
+a. 之前训练rep learning模型的时候，dataset里面的generator用错了，应该用能够区分distractor的那个generator
+b. 根据a中的问题，如果用reconstructor的话，应该能成功忽略掉distractor了
+c. rep learning和RL里面的shape数量应该保持一致
+d. envs.py这个文件里面的VecPyTorchFrameStack相当于把一个深度为4的frame stack作为四通道输入pass进了CNN里面，然后每次把当前这次的observation插入到stack的
+   最后方，把前方的几个往前挪一个位置；这相当于每次做决策的时候，网络的输入是4个连续时间点的observation（CNN baseline中的），结合了之前时间点的observation
+   来进行决策。这个该如何修改才能使CNN baseline和reward prediction baseline有可比性呢？
+   -> 检查一下auto encoder 做reconstruction的模型代码是否正确，有可能是模型的training objective不太对导致reconstruct看起来是work的
+
+
+尝试：
+1. 多训练rep learning for some epoches, 然后再把image encoder放到RL模型里面     ->应该去试试看
+2. 改一下RL模型里面rew pred baseline的模型结构     ->不是很管用
+3. 直接改动rep learning模型，让它的input变成framestack, 一次性输入四个timestep的observation
