@@ -1,24 +1,3 @@
-# CLVR Implementation Project - Starter Code
-
-
-## Requirements
-
-- python >= 3.6
-- pytorch >= 1.3
-
-## Installation Instructions
-
-Create a virtual environment and install all required packages.
-```
-cd clvr_RewIR_starter
-pip3 install virtualenv
-virtualenv -p $(which python3) ./venv
-source ./venv/bin/activate
-
-# Install dependencies
-pip3 install -r requirements.txt
-```
-
 ## Sprites Dataset
 
 We provide a dataset that generates sequences of multiple geometric objects that bounce in a 2D frame _on the fly_. An example PyTorch
